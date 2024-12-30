@@ -50,8 +50,8 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/yourusername/house-price-prediction.git
-cd house-price-prediction
+git clone https://github.com/qaysSE/house_prediction_model.git
+cd house_prediction_model
 Install dependencies:
 
 bash
