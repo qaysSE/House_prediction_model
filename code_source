@@ -1,0 +1,100 @@
+from sklearn.datasets import fetch_california_housing # to import the sklearn libaray, it's a ML model libarey that suits your data with it's widley avalible algorithms
+
+california_data = fetch_california_housing()#this code right here when ever you import a data from a libaray you need 
+  #to give that a data a name which is (california_data) and the data set in that was imported from sklearn
+
+  print(california.DESCR)# california is a varaible stored in the sklearn libaray (DESCR) is a attriubuite that is used for datasets to give a
+#description of the dataset
+
+  print(california.data.shape)# the 20640 is the numbers of houses as samples that were used in the data
+#Numbers of rows, numbers of columns 8 is the features of that data such as number of beds etc
+
+  print(california.target.shape) #it prints out how many labels are ther for every single varaible
+
+  # to load the feautes of the data sets, in another word the inputs 
+print(california.feature_names)
+
+  import pandas as pd #importing the the pandas libarary for data maniuplation and analyzing
+
+california_df=pd.DataFrame(california.data,
+                           columns=california.feature_names)
+california_df ['MedHouseValue'] = pd.Series(california.target)
+california_df.head()
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, Y_train, Y_test=train_test_split(california.data, 
+                                                   california.target, random_state=11)
+print(X_train.shape)
+print(X_test.shape)
+
+import matplotlib.pyplot as plt #the charts libaray
+import seaborn as sns #another charts libaray
+sns.set(font_scale=2)#setting the font size fron the seaborn libaray
+sns.set_style('whitegrid')# white grah from the seaborn libaray 
+
+for feature in california.feature_names:
+    plt.figure(figsize=(16, 9))
+    sns.scatterplot(data=sample_df, x=feature,y='MedHouseValue',
+                    hue='MedHouseValue', palette='cool', legend=False)
+
+sample_df = california_df.sample(frac=0.1, random_state=17)
+print(sample_df)
+
+from sklearn.linear_model import LinearRegression  #for linear regression training
+
+linear_reg=LinearRegression() #implmenting the linear reg from the libaray(sklearn) that was imported earleir 
+linear_reg.fit(X=X_train, y=Y_train) #implementing the data on x,y slope of the linear regression
+
+
+for i,name in enumerate(california.feature_names): #i will itter therough the dataset feature names
+     print(f'{name:>10}: {linear_reg.coef_[i]}') #for the linear regression to estimate a weight for each of the features
+
+print(linear_reg.intercept_)# the estimate weight of the data or the linear equation without considering any x-values or inputs, such as the
+#house "Features"
+
+predicted = linear_reg.predict(X_test) # testing
+expected = Y_test
+print(predicted)
+print(expected)
+
+#for analyzing how good our linear reg model have done 
+from sklearn.metrics import mean_squared_error, r2_score
+mse = mean_squared_error(expected, predicted)
+r2 = r2_score(expected, predicted)
+print(f'MSE: {mse}, R2: {r2}')
+
+#MSE: the squared difference between predicted and actual values is 0.45.
+#R2: accuarcy percentage 60% based on that model and reg
+
+pip install streamlit #To install the sreamlit framework
+
+import streamlit as st
+
+st.title("California Housing Price Predictor")
+st.write("This app predicts median house values in California based on given features.")
+
+# Input sliders for user input
+st.sidebar.header("Input Features")
+inputs = {}
+for feature in california.feature_names:
+    inputs[feature] = st.sidebar.slider(
+        feature, float(california_df[feature].min()), float(california_df[feature].max()), float(california_df[feature].mean())
+    )
+
+# Convert user input to DataFrame
+input_df = pd.DataFrame([inputs])
+
+# Display input data
+st.subheader("User Input Features")
+st.write(input_df)
+
+# Make prediction
+if st.button("Predict"):
+    prediction = model.predict(input_df)[0]
+    st.subheader("Predicted Median House Value")
+    st.write(f"${prediction * 100000:.2f}")
+
+# Optionally show dataset (for reference)
+if st.checkbox("Show Raw Data"):
+    st.write(data.head())
